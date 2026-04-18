@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seninle Bahar</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f4f7f6; /* Soğuk ve puslu bir başlangıç rengi */
+            font-family: 'Georgia', serif;
+            text-align: center;
+            transition: background-color 2.5s ease;
+            overflow: hidden;
+        }
+        .flower-container {
+            cursor: pointer;
+            transition: transform 0.5s ease;
+            padding: 20px;
+            -webkit-tap-highlight-color: transparent; /* Mobilde tıklama parlaklığını gizler */
+        }
+        .flower {
+            font-size: 5rem;
+            transition: all 1.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+        .message {
+            opacity: 0;
+            margin-top: 30px;
+            color: #5a4b4b;
+            font-size: 1.2rem;
+            line-height: 1.8;
+            padding: 0 25px;
+            transform: translateY(20px);
+            transition: all 2.5s ease-in-out;
+            transition-delay: 0.8s;
+        }
+        /* Çiçek açtıktan sonraki durum */
+        body.bloomed {
+            background-color: #fdf5f6; /* Sıcak, yumuşak pembe/krem arka plan */
+        }
+        body.bloomed .flower {
+            transform: scale(1.3) rotate(5deg);
+        }
+        body.bloomed .message {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .hint {
+            font-size: 0.85rem;
+            color: #9aa0a6;
+            margin-top: 20px;
+            letter-spacing: 1px;
+            opacity: 1;
+            transition: opacity 0.5s;
+        }
+        body.bloomed .hint {
+            opacity: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="flower-container" id="flowerContainer">
+        <div class="flower" id="flowerIcon">🌱</div>
+    </div>
+    
+    <div class="hint" id="hintText">Büyütmek için dokun...</div>
+
+    <div class="message" id="textMessage">
+        Kış gibi geçen zor zamanlar oldu,<br>
+        ama sonra seni buldum...<br><br>
+        Şimdi her yer bahar. 🌸
+    </div>
+
+    <script>
+        const container = document.getElementById('flowerContainer');
+        const flower = document.getElementById('flowerIcon');
+        const body = document.body;
+        let isBloomed = false;
+
+        container.addEventListener('click', () => {
+            if (!isBloomed) {
+                body.classList.add('bloomed');
+                flower.innerText = '🌸'; // Filizi kiraz çiçeğine dönüştürür
+                isBloomed = true;
+            }
+        });
+    </script>
+</body>
+</html>
