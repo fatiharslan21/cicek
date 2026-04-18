@@ -13,10 +13,11 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            background-color: #dbe2e6;
+            /* 0. Aşama: Gece Gökyüzü */
+            background: linear-gradient(to bottom, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
             font-family: 'Georgia', serif;
             text-align: center;
-            transition: background-color 2.5s ease;
+            transition: background 3s ease-in-out;
             overflow: hidden;
             position: relative;
         }
@@ -32,9 +33,9 @@
 
         .aura {
             position: absolute;
-            width: 250px;
-            height: 250px;
-            background: radial-gradient(circle, rgba(255, 183, 197, 0.6) 0%, rgba(255, 183, 197, 0) 70%);
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0) 70%);
             border-radius: 50%;
             transform: scale(0);
             opacity: 0;
@@ -46,19 +47,19 @@
             cursor: pointer;
             padding: 20px;
             -webkit-tap-highlight-color: transparent;
-            animation: pulse 2s infinite alternate;
+            animation: pulse 2.5s infinite alternate;
             position: relative;
             z-index: 11;
         }
 
         .flower {
-            font-size: 5.5rem;
+            font-size: 6rem; /* Çiçek biraz daha büyütüldü */
             display: inline-block;
-            transition: all 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-            filter: drop-shadow(0px 10px 15px rgba(0,0,0,0.15));
+            transition: all 1.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            filter: drop-shadow(0px 0px 20px rgba(255,255,255,0.2));
         }
 
-        /* Dokunma Efekti Parçacıkları */
+        /* Dokunma Patlamaları */
         .sparkle {
             position: absolute;
             width: 8px;
@@ -67,12 +68,52 @@
             pointer-events: none;
             z-index: 20;
             opacity: 0;
+            box-shadow: 0 0 10px currentColor;
+        }
+
+        /* Parmak İzi (Magic Trail) */
+        .trail {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: white;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 99;
+            box-shadow: 0 0 10px #ffb7c5, 0 0 20px #ffb7c5;
+            animation: fadeTrail 0.8s forwards;
+            transform: translate(-50%, -50%);
+        }
+
+        @keyframes fadeTrail {
+            0% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+            100% { transform: translate(-50%, -50%) scale(0.1) translateY(20px); opacity: 0; }
+        }
+
+        /* Ateşböcekleri */
+        .firefly {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #ffeb3b;
+            border-radius: 50%;
+            box-shadow: 0 0 15px 3px #ffeb3b;
+            pointer-events: none;
+            z-index: 5;
+            animation: floatFirefly 10s infinite ease-in-out;
+        }
+
+        @keyframes floatFirefly {
+            0%, 100% { transform: translateY(0) translateX(0); opacity: 0; }
+            20% { opacity: 0.8; }
+            50% { transform: translateY(-100px) translateX(50px); opacity: 1; }
+            80% { opacity: 0.5; }
         }
 
         /* Dinamik Metin Alanı */
         .message-box {
             margin-top: 40px;
-            height: 120px;
+            height: 140px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -81,72 +122,83 @@
         }
 
         .story-text {
-            color: #4a5568;
-            font-size: 1.15rem;
-            line-height: 1.7;
+            color: #d1d5db; /* Karanlıkta daha iyi okunan açık gri/mavi */
+            font-size: 1.2rem;
+            line-height: 1.8;
             padding: 0 25px;
-            opacity: 1;
-            transform: translateY(0);
-            transition: opacity 1s ease, transform 1s ease;
-            text-shadow: 0px 2px 5px rgba(255,255,255,0.8);
-        }
-
-        .story-text.hidden {
-            opacity: 0;
-            transform: translateY(15px);
+            text-shadow: 0px 2px 5px rgba(0,0,0,0.5);
+            min-height: 80px;
+            transition: color 2s ease, text-shadow 2s ease;
         }
 
         .hint {
             font-size: 0.85rem;
-            color: #718096;
+            color: #9ca3af;
             margin-top: 20px;
             letter-spacing: 1.5px;
             font-style: italic;
-            transition: opacity 0.5s ease;
+            opacity: 0; /* Başlangıçta gizli, yazılma bitince çıkacak */
+            transition: opacity 1s ease;
         }
 
-        /* AŞAMALARIN RENKLERİ VE EFEKTLERİ */
-        body.stage-1 { background-color: #e2e8e4; }
+        /* AŞAMALARIN GEÇİŞLERİ */
+        
+        /* 1. Aşama: Gün Doğumu (Pembe/Mor) */
+        body.stage-1 { 
+            background: linear-gradient(to bottom, #2b1055 0%, #7597de 100%); 
+        }
         body.stage-1 .flower { transform: scale(1.15) rotate(-5deg); }
         
-        body.stage-2 { background-color: #f5e6e8; }
+        /* 2. Aşama: Sabah Işıkları (Şeftali/Turuncu) */
+        body.stage-2 { 
+            background: linear-gradient(to bottom, #ff7e5f 0%, #feb47b 100%); 
+        }
         body.stage-2 .flower { transform: scale(1.3) rotate(5deg); }
+        body.stage-2 .story-text { color: #fff; text-shadow: 0px 2px 10px rgba(0,0,0,0.3); }
 
-        body.stage-3 { background-color: #fdf2f4; }
+        /* 3. Aşama: Bahar ve Çiçek (Sıcak Pembe/Krem) */
+        body.stage-3 { 
+            background: linear-gradient(to bottom, #fdf2f4 0%, #e2ebf0 100%); 
+        }
         body.stage-3 .flower { 
             transform: scale(1.6); 
-            filter: drop-shadow(0px 15px 25px rgba(255, 150, 170, 0.5));
+            filter: drop-shadow(0px 15px 25px rgba(255, 150, 170, 0.6));
+        }
+        body.stage-3 .story-text { 
+            color: #5a4b4b; /* Baharda metin koyulaşır */
+            text-shadow: 0px 2px 5px rgba(255,255,255,0.8);
         }
         
         /* 3. Aşamada Aura ve Uçma Efekti Devreye Girer */
         body.stage-3 .aura {
             transform: scale(1);
             opacity: 1;
+            background: radial-gradient(circle, rgba(255, 183, 197, 0.8) 0%, rgba(255, 183, 197, 0) 70%);
             animation: breathe-aura 4s infinite alternate;
         }
         body.stage-3 .flower-container { 
             animation: float 4s ease-in-out infinite; 
         }
-        body.stage-3 .hint { opacity: 0; }
+        body.stage-3 .hint { display: none; }
 
         /* ÖZEL ANİMASYONLAR */
         @keyframes pulse {
-            0% { transform: scale(1); }
-            100% { transform: scale(1.08); }
+            0% { transform: scale(1); filter: brightness(1); }
+            100% { transform: scale(1.05); filter: brightness(1.2); }
         }
 
         @keyframes float {
             0% { transform: translateY(0px); }
-            50% { transform: translateY(-15px); }
+            50% { transform: translateY(-20px); }
             100% { transform: translateY(0px); }
         }
 
         @keyframes breathe-aura {
-            0% { transform: scale(0.9); opacity: 0.7; }
-            100% { transform: scale(1.2); opacity: 1; }
+            0% { transform: scale(0.8); opacity: 0.6; }
+            100% { transform: scale(1.3); opacity: 1; }
         }
 
-        /* GELİŞMİŞ YAPRAK ANİMASYONU */
+        /* YAPRAK ANİMASYONU */
         .petal {
             position: absolute;
             background: linear-gradient(135deg, #ffb7c5 0%, #ff9aae 100%);
@@ -158,17 +210,9 @@
         }
 
         @keyframes fall {
-            0% {
-                top: -10%;
-                transform: translateX(0) rotate(0deg) scale(1);
-                opacity: 0;
-            }
-            10% { opacity: 0.8; }
-            100% {
-                top: 110%;
-                transform: translateX(150px) rotate(720deg) scale(0.8);
-                opacity: 0;
-            }
+            0% { top: -10%; transform: translateX(0) rotate(0deg) scale(1); opacity: 0; }
+            10% { opacity: 0.9; }
+            100% { top: 110%; transform: translateX(200px) rotate(720deg) scale(0.8); opacity: 0; }
         }
     </style>
 </head>
@@ -182,9 +226,7 @@
     </div>
     
     <div class="message-box">
-        <div class="story-text" id="storyText">
-            Karanlık ve zor günlerin ardından,<br>beklenmedik bir anda tanışmamızla başladı her şey...
-        </div>
+        <div class="story-text" id="storyText"></div>
         <div class="hint" id="hintText">(Yeşertmek için dokun)</div>
     </div>
 
@@ -196,8 +238,9 @@
         const body = document.body;
         
         let tapCount = 0;
+        let isTyping = false; // Yazı yazılırken tekrar tıklanmayı önlemek için
 
-        // Senin mükemmel metinlerin
+        // Senin harika metinlerin
         const texts = [
             "Karanlık ve zor günlerin ardından,<br>beklenmedik bir anda tanışmamızla başladı her şey...", 
             "Zorlukları geride bırakırken, yanımda olman ve yanında olmak en güzel şifaydı.<br>Birlikte iyileşmeye başladık...", 
@@ -212,25 +255,97 @@
             ""
         ];
 
-        // Parçacık (Sihir) Patlama Efekti
+        // --- ATEŞBÖCEKLERİ OLUŞTURMA ---
+        let fireflies = [];
+        function createFireflies() {
+            for(let i=0; i<15; i++) {
+                let fly = document.createElement('div');
+                fly.className = 'firefly';
+                fly.style.left = Math.random() * 100 + 'vw';
+                fly.style.top = Math.random() * 100 + 'vh';
+                fly.style.animationDelay = (Math.random() * 5) + 's';
+                fly.style.animationDuration = (Math.random() * 5 + 8) + 's';
+                body.appendChild(fly);
+                fireflies.push(fly);
+            }
+        }
+        createFireflies();
+
+        // --- SİHİRLİ PARMAK İZİ (MAGIC TRAIL) ---
+        function createTrailEvent(e) {
+            const touchX = e.touches ? e.touches[0].clientX : e.clientX;
+            const touchY = e.touches ? e.touches[0].clientY : e.clientY;
+            
+            const trail = document.createElement('div');
+            trail.className = 'trail';
+            trail.style.left = touchX + 'px';
+            trail.style.top = touchY + 'px';
+            body.appendChild(trail);
+
+            setTimeout(() => trail.remove(), 800);
+        }
+        document.addEventListener('mousemove', createTrailEvent);
+        document.addEventListener('touchmove', createTrailEvent);
+
+        // --- DAKTİLO EFEKTİ (TYPEWRITER) ---
+        function typeWriter(htmlContent, element, index, callback) {
+            if (index < htmlContent.length) {
+                // HTML etiketlerini (ör: <br>) bir bütün olarak atla
+                if (htmlContent.charAt(index) === '<') {
+                    let tag = '';
+                    while (htmlContent.charAt(index) !== '>' && index < htmlContent.length) {
+                        tag += htmlContent.charAt(index);
+                        index++;
+                    }
+                    tag += '>';
+                    element.innerHTML += tag;
+                    index++;
+                } else {
+                    element.innerHTML += htmlContent.charAt(index);
+                    index++;
+                }
+                setTimeout(() => typeWriter(htmlContent, element, index, callback), 45); // Yazım hızı
+            } else if (callback) {
+                callback();
+            }
+        }
+
+        // Metin değiştirme fonksiyonu
+        function changeText(stage) {
+            isTyping = true;
+            storyText.innerHTML = ''; // Önceki metni sil
+            hintText.style.opacity = 0; // İpucunu gizle
+            
+            setTimeout(() => {
+                // Yazma işlemine başla
+                typeWriter(texts[stage], storyText, 0, () => {
+                    // Yazı bitince ipucunu göster
+                    hintText.innerHTML = hints[stage];
+                    if(hints[stage] !== "") {
+                        hintText.style.opacity = 1;
+                    }
+                    isTyping = false; // Tıklamaya tekrar izin ver
+                });
+            }, 500); 
+        }
+
+        // --- DOKUNMA PATLAMASI ---
         function createBurst(color) {
             const rect = container.getBoundingClientRect();
             const centerX = rect.left + rect.width / 2;
             const centerY = rect.top + rect.height / 2;
 
-            for (let i = 0; i < 12; i++) {
+            for (let i = 0; i < 20; i++) {
                 const spark = document.createElement('div');
                 spark.classList.add('sparkle');
+                spark.style.color = color;
                 spark.style.backgroundColor = color;
                 spark.style.left = centerX + 'px';
                 spark.style.top = centerY + 'px';
-                
-                // Farklı boyutlar
-                spark.style.transform = `scale(${Math.random() + 0.5})`;
                 body.appendChild(spark);
 
                 const angle = Math.random() * Math.PI * 2;
-                const distance = Math.random() * 80 + 40; // Dağılma mesafesi
+                const distance = Math.random() * 100 + 50; 
                 const tx = Math.cos(angle) * distance;
                 const ty = Math.sin(angle) * distance;
 
@@ -238,86 +353,72 @@
                     { transform: 'translate(0,0) scale(1)', opacity: 1 },
                     { transform: `translate(${tx}px, ${ty}px) scale(0)`, opacity: 0 }
                 ], {
-                    duration: 800 + Math.random() * 500,
+                    duration: 1000 + Math.random() * 800,
                     easing: 'cubic-bezier(0, .9, .57, 1)'
                 });
 
-                setTimeout(() => spark.remove(), 1500);
+                setTimeout(() => spark.remove(), 2000);
             }
         }
 
-        // Metin değiştirme fonksiyonu
-        function changeText(stage) {
-            storyText.classList.add('hidden');
-            hintText.style.opacity = 0;
-            
-            setTimeout(() => {
-                storyText.innerHTML = texts[stage];
-                hintText.innerHTML = hints[stage];
-                
-                storyText.classList.remove('hidden');
-                if(hints[stage] !== "") {
-                    hintText.style.opacity = 1;
-                }
-            }, 1000); 
-        }
-
-        // 3D Hissiyatlı Yaprak Yağmuru
+        // --- YAPRAK YAĞMURU ---
         function startPetalRain() {
+            // Ateşböceklerini sil
+            fireflies.forEach(fly => fly.remove());
+            
             setInterval(() => {
                 const petal = document.createElement('div');
                 petal.classList.add('petal');
-                
-                const size = Math.random() * 12 + 8; 
+                const size = Math.random() * 15 + 10; 
                 petal.style.width = `${size}px`;
                 petal.style.height = `${size}px`;
                 petal.style.left = `${Math.random() * 100}vw`;
                 
-                // Arka plan derinliği (Blur) efekti
-                if (Math.random() > 0.6) {
-                    petal.style.filter = "blur(2px)";
+                if (Math.random() > 0.5) {
+                    petal.style.filter = "blur(3px)";
                     petal.style.zIndex = 0;
                 } else {
                     petal.style.zIndex = 20;
                 }
 
-                petal.style.animationDuration = `${Math.random() * 4 + 5}s`; 
-                
+                petal.style.animationDuration = `${Math.random() * 4 + 6}s`; 
                 body.appendChild(petal);
-
-                setTimeout(() => {
-                    petal.remove();
-                }, 9000);
-            }, 250); 
+                setTimeout(() => petal.remove(), 10000);
+            }, 200); 
         }
 
-        // Tıklama Olayı
+        // Sayfa yüklendiğinde ilk metni daktilo efektiyle yaz
+        window.onload = () => changeText(0);
+
+        // --- TIKLAMA (DOKUNMA) OLAYI ---
         container.addEventListener('click', (e) => {
+            if (isTyping) return; // Yazı yazılırken çoklu tıklamayı engelle
+
             tapCount++;
 
             if (tapCount === 1) {
                 body.classList.add('stage-1');
                 flower.innerText = '🌿';
-                createBurst('#a8e6cf'); // Yeşil tozlar
+                createBurst('#a8e6cf'); 
                 changeText(1);
             } 
             else if (tapCount === 2) {
                 body.classList.remove('stage-1');
                 body.classList.add('stage-2');
                 flower.innerText = '🌷';
-                createBurst('#ff8b94'); // Pembe tozlar
+                createBurst('#ffeb3b'); 
                 changeText(2);
             } 
             else if (tapCount === 3) {
                 body.classList.remove('stage-2');
                 body.classList.add('stage-3');
                 flower.innerText = '🌸';
-                createBurst('#ffb7c5'); // Bahar tozları
+                createBurst('#ffb7c5'); 
                 changeText(3);
                 
                 setTimeout(() => {
                     startPetalRain(); 
-                }, 1000); // Yapraklar metinle beraber düşmeye başlasın
+                }, 1500); 
                 
                 container.style.pointerEvents = 'none'; 
             }
