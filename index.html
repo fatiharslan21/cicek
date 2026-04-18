@@ -13,108 +13,160 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            background-color: #dbe2e6; /* Soğuk ve puslu başlangıç (Kış) */
+            background-color: #dbe2e6;
             font-family: 'Georgia', serif;
             text-align: center;
-            transition: background-color 2s ease;
+            transition: background-color 2.5s ease;
             overflow: hidden;
             position: relative;
         }
 
-        /* Çiçek ve Tıklama Alanı */
-        .flower-container {
-            cursor: pointer;
-            padding: 20px;
-            -webkit-tap-highlight-color: transparent;
-            animation: pulse 2.5s infinite alternate; /* Nefes alma efekti */
-            z-index: 10;
-        }
-
-        .flower {
-            font-size: 5rem;
-            display: inline-block;
-            transition: all 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-            filter: drop-shadow(0px 10px 15px rgba(0,0,0,0.1));
-        }
-
-        /* Dinamik Metin Alanı */
-        .message-box {
-            margin-top: 30px;
-            height: 100px; /* Sabit yükseklik, zıplamayı önler */
+        /* Çiçek ve Aura Alanı */
+        .scene {
+            position: relative;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
             z-index: 10;
         }
 
+        .aura {
+            position: absolute;
+            width: 250px;
+            height: 250px;
+            background: radial-gradient(circle, rgba(255, 183, 197, 0.6) 0%, rgba(255, 183, 197, 0) 70%);
+            border-radius: 50%;
+            transform: scale(0);
+            opacity: 0;
+            transition: transform 2s ease, opacity 2s ease;
+            pointer-events: none;
+        }
+
+        .flower-container {
+            cursor: pointer;
+            padding: 20px;
+            -webkit-tap-highlight-color: transparent;
+            animation: pulse 2s infinite alternate;
+            position: relative;
+            z-index: 11;
+        }
+
+        .flower {
+            font-size: 5.5rem;
+            display: inline-block;
+            transition: all 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            filter: drop-shadow(0px 10px 15px rgba(0,0,0,0.15));
+        }
+
+        /* Dokunma Efekti Parçacıkları */
+        .sparkle {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 20;
+            opacity: 0;
+        }
+
+        /* Dinamik Metin Alanı */
+        .message-box {
+            margin-top: 40px;
+            height: 120px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 15;
+            position: relative;
+        }
+
         .story-text {
             color: #4a5568;
-            font-size: 1.1rem;
-            line-height: 1.6;
-            padding: 0 30px;
+            font-size: 1.15rem;
+            line-height: 1.7;
+            padding: 0 25px;
             opacity: 1;
             transform: translateY(0);
-            transition: opacity 0.8s ease, transform 0.8s ease;
+            transition: opacity 1s ease, transform 1s ease;
+            text-shadow: 0px 2px 5px rgba(255,255,255,0.8);
         }
 
         .story-text.hidden {
             opacity: 0;
-            transform: translateY(10px);
+            transform: translateY(15px);
         }
 
         .hint {
             font-size: 0.85rem;
             color: #718096;
-            margin-top: 15px;
+            margin-top: 20px;
             letter-spacing: 1.5px;
             font-style: italic;
             transition: opacity 0.5s ease;
         }
 
-        /* AŞAMALARIN RENKLERİ */
-        /* 1. Aşama: İlk Dokunuş (Yeşerme) */
+        /* AŞAMALARIN RENKLERİ VE EFEKTLERİ */
         body.stage-1 { background-color: #e2e8e4; }
-        body.stage-1 .flower { transform: scale(1.15); }
+        body.stage-1 .flower { transform: scale(1.15) rotate(-5deg); }
         
-        /* 2. Aşama: İkinci Dokunuş (Isınma) */
-        body.stage-2 { background-color: #f0e6e6; }
-        body.stage-2 .flower { transform: scale(1.3); }
+        body.stage-2 { background-color: #f5e6e8; }
+        body.stage-2 .flower { transform: scale(1.3) rotate(5deg); }
 
-        /* 3. Aşama: Son Dokunuş (Bahar) */
         body.stage-3 { background-color: #fdf2f4; }
         body.stage-3 .flower { 
-            transform: scale(1.5) rotate(5deg); 
-            filter: drop-shadow(0px 15px 20px rgba(255, 183, 197, 0.4));
+            transform: scale(1.6); 
+            filter: drop-shadow(0px 15px 25px rgba(255, 150, 170, 0.5));
         }
-        body.stage-3 .flower-container { animation: none; } /* Pulse biter */
+        
+        /* 3. Aşamada Aura ve Uçma Efekti Devreye Girer */
+        body.stage-3 .aura {
+            transform: scale(1);
+            opacity: 1;
+            animation: breathe-aura 4s infinite alternate;
+        }
+        body.stage-3 .flower-container { 
+            animation: float 4s ease-in-out infinite; 
+        }
         body.stage-3 .hint { opacity: 0; }
 
-        /* NEFES ALMA ANİMASYONU */
+        /* ÖZEL ANİMASYONLAR */
         @keyframes pulse {
             0% { transform: scale(1); }
-            100% { transform: scale(1.05); }
+            100% { transform: scale(1.08); }
         }
 
-        /* DÜŞEN YAPRAKLAR (PETALS) ANİMASYONU */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+
+        @keyframes breathe-aura {
+            0% { transform: scale(0.9); opacity: 0.7; }
+            100% { transform: scale(1.2); opacity: 1; }
+        }
+
+        /* GELİŞMİŞ YAPRAK ANİMASYONU */
         .petal {
             position: absolute;
-            background-color: #ffb7c5;
+            background: linear-gradient(135deg, #ffb7c5 0%, #ff9aae 100%);
             border-radius: 15px 0px 15px 0px;
-            opacity: 0.6;
             pointer-events: none;
             z-index: 1;
             animation: fall linear infinite;
+            box-shadow: 0px 2px 5px rgba(0,0,0,0.1);
         }
 
         @keyframes fall {
             0% {
                 top: -10%;
-                transform: translateX(0) rotate(0deg);
-                opacity: 0.8;
+                transform: translateX(0) rotate(0deg) scale(1);
+                opacity: 0;
             }
+            10% { opacity: 0.8; }
             100% {
                 top: 110%;
-                transform: translateX(100px) rotate(360deg);
+                transform: translateX(150px) rotate(720deg) scale(0.8);
                 opacity: 0;
             }
         }
@@ -122,13 +174,16 @@
 </head>
 <body>
 
-    <div class="flower-container" id="flowerContainer">
-        <div class="flower" id="flowerIcon">🌱</div>
+    <div class="scene">
+        <div class="aura"></div>
+        <div class="flower-container" id="flowerContainer">
+            <div class="flower" id="flowerIcon">🌱</div>
+        </div>
     </div>
     
     <div class="message-box">
         <div class="story-text" id="storyText">
-            Karanlık ve zor günlerin ortasında,<br>küçücük bir umutla başladı her şey...
+            Karanlık ve zor günlerin ardından,<br>beklenmedik bir anda tanışmamızla başladı her şey...
         </div>
         <div class="hint" id="hintText">(Yeşertmek için dokun)</div>
     </div>
@@ -142,12 +197,12 @@
         
         let tapCount = 0;
 
-        // Hikaye Metinleri
+        // Senin mükemmel metinlerin
         const texts = [
-            "Karanlık ve zor günlerin ardıbdab,<br>beklenmedik bir anda tanışmamızla başladı her şey...", // Başlangıç (0)
-            "Zorlukları geride bırakırken, yanımda olman ve yanında olmak en güzel şifaydı.<br>Birlikte iyileşmeye başladık...", // 1. Aşama
-            "Zamanla o incecik bağ güçlendi.<br>İçimde sana dair çok güzel bir his büyümeye başladı...", // 2. Aşama
-            "Ve şimdi kışın ve ayazın tamamen bittiğini hissediyorum...<br>İyi ki bulduk birbirimizi.<br><br>Şimdi seninle her şey ve her yer çok güzel. Seni çok seviyorum. 🌸" // 3. Aşama
+            "Karanlık ve zor günlerin ardından,<br>beklenmedik bir anda tanışmamızla başladı her şey...", 
+            "Zorlukları geride bırakırken, yanımda olman ve yanında olmak en güzel şifaydı.<br>Birlikte iyileşmeye başladık...", 
+            "Zamanla o incecik bağ güçlendi.<br>İçimde sana dair çok güzel bir his büyümeye başladı...", 
+            "Ve şimdi kışın ve ayazın tamamen bittiğini hissediyorum...<br>İyi ki bulduk birbirimizi.<br><br>Şimdi seninle her şey ve her yer çok güzel. Seni çok seviyorum. 🌸" 
         ];
 
         const hints = [
@@ -157,7 +212,41 @@
             ""
         ];
 
-        // Metin değiştirme fonksiyonu (Yumuşak geçiş ile)
+        // Parçacık (Sihir) Patlama Efekti
+        function createBurst(color) {
+            const rect = container.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+
+            for (let i = 0; i < 12; i++) {
+                const spark = document.createElement('div');
+                spark.classList.add('sparkle');
+                spark.style.backgroundColor = color;
+                spark.style.left = centerX + 'px';
+                spark.style.top = centerY + 'px';
+                
+                // Farklı boyutlar
+                spark.style.transform = `scale(${Math.random() + 0.5})`;
+                body.appendChild(spark);
+
+                const angle = Math.random() * Math.PI * 2;
+                const distance = Math.random() * 80 + 40; // Dağılma mesafesi
+                const tx = Math.cos(angle) * distance;
+                const ty = Math.sin(angle) * distance;
+
+                spark.animate([
+                    { transform: 'translate(0,0) scale(1)', opacity: 1 },
+                    { transform: `translate(${tx}px, ${ty}px) scale(0)`, opacity: 0 }
+                ], {
+                    duration: 800 + Math.random() * 500,
+                    easing: 'cubic-bezier(0, .9, .57, 1)'
+                });
+
+                setTimeout(() => spark.remove(), 1500);
+            }
+        }
+
+        // Metin değiştirme fonksiyonu
         function changeText(stage) {
             storyText.classList.add('hidden');
             hintText.style.opacity = 0;
@@ -170,54 +259,66 @@
                 if(hints[stage] !== "") {
                     hintText.style.opacity = 1;
                 }
-            }, 800); // 0.8 saniye karanlıkta kalıp yeni yazıyla gelir
+            }, 1000); 
         }
 
-        // Yaprak (Petal) yağdırma fonksiyonu
+        // 3D Hissiyatlı Yaprak Yağmuru
         function startPetalRain() {
             setInterval(() => {
                 const petal = document.createElement('div');
                 petal.classList.add('petal');
                 
-                // Rastgele boyut, konum ve hız
-                const size = Math.random() * 10 + 10; // 10px - 20px arası
+                const size = Math.random() * 12 + 8; 
                 petal.style.width = `${size}px`;
                 petal.style.height = `${size}px`;
                 petal.style.left = `${Math.random() * 100}vw`;
-                petal.style.animationDuration = `${Math.random() * 3 + 4}s`; // 4-7 saniye düşüş
+                
+                // Arka plan derinliği (Blur) efekti
+                if (Math.random() > 0.6) {
+                    petal.style.filter = "blur(2px)";
+                    petal.style.zIndex = 0;
+                } else {
+                    petal.style.zIndex = 20;
+                }
+
+                petal.style.animationDuration = `${Math.random() * 4 + 5}s`; 
                 
                 body.appendChild(petal);
 
-                // Ekrandan çıkan yaprağı sil
                 setTimeout(() => {
                     petal.remove();
-                }, 7000);
-            }, 300); // Her 300ms'de bir yeni yaprak oluştur
+                }, 9000);
+            }, 250); 
         }
 
         // Tıklama Olayı
-        container.addEventListener('click', () => {
+        container.addEventListener('click', (e) => {
             tapCount++;
 
             if (tapCount === 1) {
                 body.classList.add('stage-1');
                 flower.innerText = '🌿';
+                createBurst('#a8e6cf'); // Yeşil tozlar
                 changeText(1);
             } 
             else if (tapCount === 2) {
                 body.classList.remove('stage-1');
                 body.classList.add('stage-2');
                 flower.innerText = '🌷';
+                createBurst('#ff8b94'); // Pembe tozlar
                 changeText(2);
             } 
             else if (tapCount === 3) {
                 body.classList.remove('stage-2');
                 body.classList.add('stage-3');
                 flower.innerText = '🌸';
+                createBurst('#ffb7c5'); // Bahar tozları
                 changeText(3);
-                startPetalRain(); // Bahar geldi, yapraklar yağsın!
                 
-                // Animasyon tamamlandı, tıklamayı kapat
+                setTimeout(() => {
+                    startPetalRain(); 
+                }, 1000); // Yapraklar metinle beraber düşmeye başlasın
+                
                 container.style.pointerEvents = 'none'; 
             }
         });
