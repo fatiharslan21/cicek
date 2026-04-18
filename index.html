@@ -13,22 +13,35 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            background-color: #f4f7f6; /* Soğuk ve puslu bir başlangıç rengi */
+            /* Başlangıç: Soğuk, gri/mavi tonlar (Zor zamanlar) */
+            background-color: #e0e5e9; 
             font-family: 'Georgia', serif;
             text-align: center;
-            transition: background-color 2.5s ease;
+            transition: background-color 1.5s ease;
             overflow: hidden;
         }
+
         .flower-container {
             cursor: pointer;
-            transition: transform 0.5s ease;
             padding: 20px;
-            -webkit-tap-highlight-color: transparent; /* Mobilde tıklama parlaklığını gizler */
+            -webkit-tap-highlight-color: transparent;
         }
+
         .flower {
             font-size: 5rem;
-            transition: all 1.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            display: inline-block;
+            transition: all 1s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
+
+        .hint {
+            font-size: 0.9rem;
+            color: #7a8288;
+            margin-top: 20px;
+            letter-spacing: 1px;
+            transition: opacity 0.5s ease, color 1s ease;
+            height: 20px; /* Metin değişirken sayfanın zıplamasını engeller */
+        }
+
         .message {
             opacity: 0;
             margin-top: 30px;
@@ -37,30 +50,45 @@
             line-height: 1.8;
             padding: 0 25px;
             transform: translateY(20px);
-            transition: all 2.5s ease-in-out;
-            transition-delay: 0.8s;
+            transition: all 2s ease-in-out;
+            pointer-events: none; /* Yanlışlıkla metne tıklanmasını engeller */
         }
-        /* Çiçek açtıktan sonraki durum */
-        body.bloomed {
-            background-color: #fdf5f6; /* Sıcak, yumuşak pembe/krem arka plan */
+
+        /* 1. Aşama: İlk Dokunuş (Umut yeşeriyor) */
+        body.stage-1 {
+            background-color: #e8ede7; /* Hafif yeşil/sıcak bir kırık beyaz */
         }
-        body.bloomed .flower {
-            transform: scale(1.3) rotate(5deg);
+        body.stage-1 .flower {
+            transform: scale(1.1);
         }
-        body.bloomed .message {
+        body.stage-1 .hint {
+            color: #6b7a69;
+        }
+
+        /* 2. Aşama: İkinci Dokunuş (Isınıyor) */
+        body.stage-2 {
+            background-color: #f5ece9; /* Hafif somon/sıcak tonlar */
+        }
+        body.stage-2 .flower {
+            transform: scale(1.2);
+        }
+        body.stage-2 .hint {
+            color: #8c6b6b;
+        }
+
+        /* 3. Aşama: Son Dokunuş (Çiçek açtı, bahar geldi) */
+        body.stage-3 {
+            background-color: #fdf5f6; /* Yumuşak, sıcak pembe */
+        }
+        body.stage-3 .flower {
+            transform: scale(1.4) rotate(5deg);
+        }
+        body.stage-3 .hint {
+            opacity: 0; /* İpucu kaybolur */
+        }
+        body.stage-3 .message {
             opacity: 1;
-            transform: translateY(0);
-        }
-        .hint {
-            font-size: 0.85rem;
-            color: #9aa0a6;
-            margin-top: 20px;
-            letter-spacing: 1px;
-            opacity: 1;
-            transition: opacity 0.5s;
-        }
-        body.bloomed .hint {
-            opacity: 0;
+            transform: translateY(0); /* Mesaj yukarı doğru süzülerek gelir */
         }
     </style>
 </head>
@@ -70,10 +98,10 @@
         <div class="flower" id="flowerIcon">🌱</div>
     </div>
     
-    <div class="hint" id="hintText">Büyütmek için dokun...</div>
+    <div class="hint" id="hintText">Biraz sevgiye ihtiyacı var, dokun...</div>
 
     <div class="message" id="textMessage">
-        Kış gibi geçen zor zamanlar oldu,<br>
+        Kış gibi geçen o zor zamanlar oldu,<br>
         ama sonra seni buldum...<br><br>
         Şimdi her yer bahar. 🌸
     </div>
@@ -81,14 +109,41 @@
     <script>
         const container = document.getElementById('flowerContainer');
         const flower = document.getElementById('flowerIcon');
+        const hint = document.getElementById('hintText');
         const body = document.body;
-        let isBloomed = false;
+        
+        let tapCount = 0;
 
         container.addEventListener('click', () => {
-            if (!isBloomed) {
-                body.classList.add('bloomed');
-                flower.innerText = '🌸'; // Filizi kiraz çiçeğine dönüştürür
-                isBloomed = true;
+            tapCount++;
+
+            if (tapCount === 1) {
+                // İlk Dokunuş
+                body.classList.add('stage-1');
+                flower.innerText = '🌿'; // Yapraklanır
+                flower.style.opacity = 0; // Yumuşak geçiş için
+                setTimeout(() => flower.style.opacity = 1, 50);
+                hint.innerText = 'Güneş açıyor, bir daha dokun...';
+            } 
+            else if (tapCount === 2) {
+                // İkinci Dokunuş
+                body.classList.remove('stage-1');
+                body.classList.add('stage-2');
+                flower.innerText = '🌷'; // Tomurcuklanır
+                flower.style.opacity = 0;
+                setTimeout(() => flower.style.opacity = 1, 50);
+                hint.innerText = 'Çok az kaldı...';
+            } 
+            else if (tapCount === 3) {
+                // Üçüncü Dokunuş (Final)
+                body.classList.remove('stage-2');
+                body.classList.add('stage-3');
+                flower.innerText = '🌸'; // Çiçek açar
+                flower.style.opacity = 0;
+                setTimeout(() => flower.style.opacity = 1, 50);
+                
+                // 3. tıklamadan sonra tıklamayı devre dışı bırakıyoruz ki başa sarmasın
+                container.style.pointerEvents = 'none'; 
             }
         });
     </script>
